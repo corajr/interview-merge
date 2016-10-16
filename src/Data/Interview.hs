@@ -1,12 +1,15 @@
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE TupleSections #-}
 module Data.Interview where
 
 import qualified Data.Text as T
 import Data.Text (Text)
-import Control.Arrow (second)
+import Control.Arrow (second, right)
 import Data.List (sortBy, groupBy)
 import Data.Function (on)
 import Data.Monoid ((<>))
+import Data.Attoparsec.Text (parseOnly, endOfInput)
+import System.Environment (getArgs)
 import Text.Subtitles.SRT
 
 newtype Participant = Participant
@@ -40,5 +43,18 @@ makeInterview lines = renumberedTurns
         turnListToLines :: [Turn] -> (Participant, [Line])
         turnListToLines ((p,x):xs) = (p, x:map snd xs)
 
+parseArgs :: [String] -> [(Participant, FilePath)]
+parseArgs [] = []
+parseArgs (x:y:xs) = (Participant (T.pack x), y) : parseArgs xs
+
+readInterview :: (Participant, FilePath) -> IO (Either String (Participant, Subtitles))
+readInterview (p,x) = readFile x >>= (return . right (p,) . parseOnly (parseSRT <* endOfInput) . T.pack)
+
 appMain :: IO ()
-appMain = undefined
+appMain = do
+  args <- getArgs
+  let participantFiles = parseArgs args
+  input <- mapM readInterview participantFiles
+  case sequence input of
+    Left err -> putStrLn err
+    Right xs -> print (makeInterview xs)

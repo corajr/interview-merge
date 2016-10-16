@@ -79,3 +79,7 @@ spec = do
     it "weaves together an interview from different speakers" $ do
       let inputData = [(speaker1, parsedSRT), (speaker2, parsedSRT2)]
       makeInterview inputData `shouldBe` exampleInterview
+  describe "parseArgs" $ do
+    it "parses command-line arguments into a list of participants and files" $
+      parseArgs ["Me", "me.srt", "Other", "other.srt"] `shouldBe`
+        [(Participant "Me", "me.srt"), (Participant "Other", "other.srt")]
