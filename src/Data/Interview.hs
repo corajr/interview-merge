@@ -10,7 +10,7 @@ import Data.ByteString.Lazy (ByteString)
 import Data.Aeson (encode)
 import Data.Text (Text)
 import Control.Arrow (second, right)
-import Data.List (sortBy, groupBy)
+import Data.List (sortBy, groupBy, intersperse)
 import Data.Function (on)
 import Data.Monoid ((<>))
 import Data.Attoparsec.Text (parseOnly, endOfInput)
@@ -60,11 +60,12 @@ readInterview :: (Participant, FilePath) -> IO (Either String (Participant, Subt
 readInterview (p,x) = readFile x >>= (return . right (p,) . parseOnly (parseSRT <* endOfInput) . T.pack)
 
 toPandoc :: Interview -> Pandoc
-toPandoc = doc . fromList . concatMap (toList . f)
-  where f (p, line) = para $ (toOtrTimestamp . from . range $ line)
+toPandoc = doc . fromList . intersperse (Para [LineBreak]) . concatMap (toList . f)
+  where f (p, line) = para ((toOtrTimestamp . from . range $ line)
                            <> linebreak
                            <> toName p
                            <> (text . T.unpack . dialog $ line)
+                           )
         toName (Participant p) = emph (spanWith ("", ["speaker"], [("data-speaker", p)]) (text p)) <> ": "
 
 toOTR :: Interview -> OTR

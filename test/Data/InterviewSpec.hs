@@ -63,7 +63,7 @@ exampleInterview =
   ]
 
 exampleInterviewHTML =
-  "<p><span class=\"timestamp\" data-timestamp=\"0:00\" contenteditable=\"false\">0:00</span><br />\n<em><span class=\"speaker\" data-speaker=\"Me\">Me</span></em>: hopefully this works yeah i know i mean i I uh I haven't uh</p>\n<p><span class=\"timestamp\" data-timestamp=\"0:04\" contenteditable=\"false\">0:04</span><br />\n<em><span class=\"speaker\" data-speaker=\"Other\">Other</span></em>: we could have done this in person</p>"
+  "<p><span class=\"timestamp\" data-timestamp=\"0:00\" contenteditable=\"false\">0:00</span><br />\n<em><span class=\"speaker\" data-speaker=\"Me\">Me</span></em>: hopefully this works yeah i know i mean i I uh I haven't uh</p>\n<p><br />\n</p>\n<p><span class=\"timestamp\" data-timestamp=\"0:04\" contenteditable=\"false\">0:04</span><br />\n<em><span class=\"speaker\" data-speaker=\"Other\">Other</span></em>: we could have done this in person</p>"
 
 -- `main` is here so that this module can be run from GHCi on its own.  It is
 -- not needed for automatic spec discovery.
