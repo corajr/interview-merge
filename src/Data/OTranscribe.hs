@@ -9,6 +9,7 @@ import Text.Pandoc
 import Text.Subtitles.SRT.Datatypes
 import Data.Char (toLower)
 import Text.Pandoc.Builder
+import Text.Printf
 
 data OTR = OTR
   { otrText :: String
@@ -23,10 +24,12 @@ $(deriveJSON defaultOptions{
 
 toOtrTimestamp :: Time -> Inlines
 toOtrTimestamp t =
-  spanWith ("", ["timestamp"], []) (text t')
+  spanWith ("", ["timestamp"], [ ("data-timestamp", t')
+                               , ("contenteditable", "false")
+                               ]) (text t')
   where
     h = hour t
     h' = if h > 0 then show h <> ":" else ""
-    m = minutes t
-    s = seconds t
-    t' = h' <> show m <> ":" <> show s
+    m = show (minutes t)
+    s = printf "%02d" $ seconds t
+    t' = h' <> m <> ":" <> s

@@ -22,6 +22,7 @@ library
                      , attoparsec
                      , pandoc
                      , pandoc-types
+                     , data-default
                      , aeson
                      , bytestring
                      , subtitleParser

@@ -10,10 +10,12 @@ import Data.Aeson (encode)
 import Data.ByteString.Lazy (ByteString)
 
 exTime :: Time
-exTime = Time { hour = 0, minutes = 1, seconds = 11, frame = 0}
+exTime = Time { hour = 0, minutes = 1, seconds = 1, frame = 0}
 
 exTimestamp :: Inlines
-exTimestamp = spanWith ("", ["timestamp"], []) (text "1:11")
+exTimestamp = spanWith ("", ["timestamp"], [ ("data-timestamp", "1:01")
+                                           , ("contenteditable", "false")
+                                           ]) (text "1:01")
 
 otrEx :: OTR
 otrEx = OTR

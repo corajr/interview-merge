@@ -1,6 +1,8 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TupleSections #-}
-module Data.Interview where
+module Data.Interview ( module Data.Interview
+                      , module Data.OTranscribe
+                      ) where
 
 import qualified Data.Text as T
 import qualified Data.ByteString.Lazy.Char8 as BL
@@ -14,10 +16,13 @@ import Data.Monoid ((<>))
 import Data.Attoparsec.Text (parseOnly, endOfInput)
 import System.Environment (getArgs)
 import Text.Subtitles.SRT
+import Text.Pandoc.Builder
+import Text.Pandoc.Writers.HTML (writeHtmlString)
+import Data.Default (def)
 import Data.OTranscribe
 
 newtype Participant = Participant
-  { participantName :: Text }
+  { participantName :: String }
   deriving (Eq, Show, Ord)
 
 type Turn = (Participant, Line)
@@ -49,13 +54,26 @@ makeInterview lines = renumberedTurns
 
 parseArgs :: [String] -> [(Participant, FilePath)]
 parseArgs [] = []
-parseArgs (x:y:xs) = (Participant (T.pack x), y) : parseArgs xs
+parseArgs (x:y:xs) = (Participant x, y) : parseArgs xs
 
 readInterview :: (Participant, FilePath) -> IO (Either String (Participant, Subtitles))
 readInterview (p,x) = readFile x >>= (return . right (p,) . parseOnly (parseSRT <* endOfInput) . T.pack)
 
+toPandoc :: Interview -> Pandoc
+toPandoc = doc . fromList . concatMap (toList . f)
+  where f (p, line) = para $ (toOtrTimestamp . from . range $ line)
+                           <> linebreak
+                           <> toName p
+                           <> (text . T.unpack . dialog $ line)
+        toName (Participant p) = emph (spanWith ("", ["speaker"], [("data-speaker", p)]) (text p)) <> ": "
+
 toOTR :: Interview -> OTR
-toOTR = undefined
+toOTR interview =
+  OTR { otrText = writeHtmlString def (toPandoc interview)
+      , otrMedia = ""
+      , otrMedia_time = 0.0
+      , otrMedia_source = ""
+      }
 
 appMain :: IO ()
 appMain = do

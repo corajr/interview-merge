@@ -62,6 +62,9 @@ exampleInterview =
   , (speaker2, line1' {index = 2})
   ]
 
+exampleInterviewHTML =
+  "<p><span class=\"timestamp\" data-timestamp=\"0:00\" contenteditable=\"false\">0:00</span><br />\n<em><span class=\"speaker\" data-speaker=\"Me\">Me</span></em>: hopefully this works yeah i know i mean i I uh I haven't uh</p>\n<p><span class=\"timestamp\" data-timestamp=\"0:04\" contenteditable=\"false\">0:04</span><br />\n<em><span class=\"speaker\" data-speaker=\"Other\">Other</span></em>: we could have done this in person</p>"
+
 -- `main` is here so that this module can be run from GHCi on its own.  It is
 -- not needed for automatic spec discovery.
 main :: IO ()
@@ -83,3 +86,11 @@ spec = do
     it "parses command-line arguments into a list of participants and files" $
       parseArgs ["Me", "me.srt", "Other", "other.srt"] `shouldBe`
         [(Participant "Me", "me.srt"), (Participant "Other", "other.srt")]
+  describe "toOTR" $ do
+    it "converts an interview to an OTR record" $ do
+      toOTR exampleInterview `shouldBe` OTR { otrText = exampleInterviewHTML
+                                            , otrMedia = ""
+                                            , otrMedia_time = 0.0
+                                            , otrMedia_source = ""
+                                            }
+
