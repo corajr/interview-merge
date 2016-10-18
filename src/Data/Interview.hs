@@ -3,6 +3,9 @@
 module Data.Interview where
 
 import qualified Data.Text as T
+import qualified Data.ByteString.Lazy.Char8 as BL
+import Data.ByteString.Lazy (ByteString)
+import Data.Aeson (encode)
 import Data.Text (Text)
 import Control.Arrow (second, right)
 import Data.List (sortBy, groupBy)
@@ -11,6 +14,7 @@ import Data.Monoid ((<>))
 import Data.Attoparsec.Text (parseOnly, endOfInput)
 import System.Environment (getArgs)
 import Text.Subtitles.SRT
+import Data.OTranscribe
 
 newtype Participant = Participant
   { participantName :: Text }
@@ -50,6 +54,9 @@ parseArgs (x:y:xs) = (Participant (T.pack x), y) : parseArgs xs
 readInterview :: (Participant, FilePath) -> IO (Either String (Participant, Subtitles))
 readInterview (p,x) = readFile x >>= (return . right (p,) . parseOnly (parseSRT <* endOfInput) . T.pack)
 
+toOTR :: Interview -> OTR
+toOTR = undefined
+
 appMain :: IO ()
 appMain = do
   args <- getArgs
@@ -57,4 +64,4 @@ appMain = do
   input <- mapM readInterview participantFiles
   case sequence input of
     Left err -> putStrLn err
-    Right xs -> print (makeInterview xs)
+    Right xs -> BL.putStrLn . encode . toOTR . makeInterview $ xs
