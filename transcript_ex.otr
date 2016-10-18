@@ -1,0 +1,6 @@
+{
+    "text": "        <p data-l10n-id=\"\">Enter your transcript here...</p>\n        <p>&nbsp;</p>\n        <p>&nbsp;<span class=\"timestamp\" data-timestamp=\"0:01\" style=\"font-family: Arial; font-size: 15px;\" contenteditable=\"false\">0:01</span><span style=\"font-family: Arial; font-size: 15px;\">&nbsp;</span></p>\n        <p data-l10n-id=\"\"><br></p><p data-l10n-id=\"\">Quick tips:</p>\n        <p>&nbsp;</p>\n        <p data-l10n-id=\"\">- <em>Ctrl+I</em> adds <em>italic</em> formatting and <b>Ctrl+B</b> adds <b>bold</b> formatting.</p>\n        <p data-l10n-id=\"\">- Press ESC to play/pause, and Ctrl+J to insert the current timestamp.</p><p>\n    </p>",
+    "media": "ceasar.mp3",
+    "media-time": 1.98952,
+    "media-source": ""
+}
